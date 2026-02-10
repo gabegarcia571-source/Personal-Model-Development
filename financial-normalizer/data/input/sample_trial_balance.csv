@@ -1,0 +1,21 @@
+Date,Account,Description,Debit,Credit,Entity
+2024-01-15,5100,Legal fees - interconnection study,50000,0,GreenPower LLC
+2024-01-15,6200,Owner salary - January,25000,0,GreenPower LLC
+2024-01-20,5300,Environmental compliance audit,75000,0,GreenPower LLC
+2024-01-20,7100,Construction period interest,100000,0,GreenPower LLC
+2024-01-25,5400,Operations and maintenance,15000,0,GreenPower LLC
+2024-01-25,5500,Property insurance,8000,0,GreenPower LLC
+2024-01-30,5600,Utilities expense,3500,0,GreenPower LLC
+2024-02-01,5100,Legal fees - permitting,35000,0,GreenPower LLC
+2024-02-05,6200,Owner salary - February,25000,0,GreenPower LLC
+2024-02-10,5700,Equipment maintenance,12000,0,GreenPower LLC
+2024-02-15,7200,Tax equity structuring fee,150000,0,GreenPower LLC
+2024-02-20,5800,Professional services,20000,0,GreenPower LLC
+2024-02-25,5400,Operations and maintenance,15000,0,GreenPower LLC
+2024-03-01,6300,Management fee - related party,30000,0,GreenPower LLC
+2024-03-05,5900,Grid interconnection fees,45000,0,GreenPower LLC
+2024-03-10,6000,Regulatory compliance - remediation,60000,0,GreenPower LLC
+2024-03-15,6100,Feasibility study costs,40000,0,GreenPower LLC
+2024-03-20,5500,Property insurance,8000,0,GreenPower LLC
+2024-03-25,7300,Swap breakage cost,85000,0,GreenPower LLC
+2024-03-30,5400,Operations and maintenance,15000,0,GreenPower LLC

@@ -1,0 +1,36 @@
+energy_transition:
+  adjustments:
+    non_recurring_dev:
+      name: "Non-Recurring Development Costs"
+      keywords:
+        - "feasibility"
+        - "permitting"
+        - "interconnection"
+        - "development fee"
+      adjustment_type: "add_back"
+      
+    owner_costs:
+      name: "Owner/Sponsor Costs"
+      keywords:
+        - "owner"
+        - "related party"
+        - "management fee"
+      adjustment_type: "normalize"
+      
+    regulatory_costs:
+      name: "One-Time Regulatory Costs"
+      keywords:
+        - "compliance"
+        - "audit"
+        - "remediation"
+        - "environmental"
+      adjustment_type: "add_back"
+      
+    financing_artifacts:
+      name: "Financing Artifacts"
+      keywords:
+        - "construction interest"
+        - "swap breakage"
+        - "tax equity"
+        - "structuring fee"
+      adjustment_type: "exclude"

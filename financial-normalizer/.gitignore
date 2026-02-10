@@ -1,0 +1,11 @@
+__pycache__/
+*.pyc
+.env
+data/input/*
+data/output/*
+!data/input/.gitkeep
+!data/output/.gitkeep
+.DS_Store
+*.xlsx
+*.csv
+!data/input/sample_trial_balance.csv
