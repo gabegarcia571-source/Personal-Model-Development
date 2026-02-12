@@ -1,0 +1,15 @@
+================================================================================
+FINANCIAL NORMALIZER - VERIFICATION REPORT
+================================================================================
+
+[CHECK 1] Verifying project structure...
+  ✗ config/categories.yaml
+  ✗ data/input/sample_trial_balance.csv
+  ✗ src/main.py
+  ✗ src/ingestion/trial_balance_parser.py
+  ✗ src/classification/classifier.py
+  ✗ src/normalization/adjustments.py
+  ✗ src/normalization/engine.py
+  ✗ requirements.txt
+
+⚠️  Missing 8 files!
