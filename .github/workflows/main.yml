@@ -1,4 +1,3 @@
-cd /workspaces/Personal-Model-Development
-git add .
-git commit -m "initial: Financial Normalizer - complete with documentation and testing"
+git add .github/workflows/main.yml
+git commit -m "fix: Add corrected GitHub Actions workflow"
 git push origin main
