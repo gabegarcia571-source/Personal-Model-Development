@@ -1,0 +1,94 @@
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
+env/
+venv/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+MANIFEST
+pip-log.txt
+pip-delete-this-directory.txt
+
+# Testing
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+.hypothesis/
+.pytest_cache/
+
+# Virtual environments
+.venv
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+.DS_Store
+*.sublime-project
+*.sublime-workspace
+
+# Environment variables
+.env
+.env.local
+.env.*.local
+
+# Output files and results
+data/output/
+results/
+*.csv
+!data/input/sample_trial_balance.csv
+*.xlsx
+*.xls
+*.json
+output/
+
+# Temporary files
+*.tmp
+*.temp
+*.log
+*.bak
+*.backup
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+*.swp
+*.swo
+
+# Project specific
+financial-normalizer/.env
+financial-normalizer/__pycache__/
+financial-normalizer/data/output/*
+financial-normalizer/.pytest_cache/
+financial-normalizer/.coverage
+
+# Keep sample data and config
+!data/input/
+!config/

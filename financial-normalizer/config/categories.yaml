@@ -1,4 +1,295 @@
+# Account Classification Framework with Industry-Specific Handling
+
+# Industry: SaaS / Technology
+saas_tech:
+  industry_name: "Software as a Service"
+  revenue_accounts:
+    # 4-digit scheme
+    "4000":
+      name: "SaaS Subscription Revenue"
+      account_type: "revenue"
+      metrics: ["subscription_revenue"]
+    "4001":
+      name: "Professional Services Revenue"
+      account_type: "revenue"
+      metrics: ["services_revenue"]
+    "4002":
+      name: "Maintenance & Support Revenue"
+      account_type: "revenue"
+      metrics: ["support_revenue"]
+    # Alphanumeric scheme
+    "REV-SUB":
+      name: "SaaS Subscription Revenue"
+      account_type: "revenue"
+      metrics: ["subscription_revenue"]
+  cogs_accounts:
+    "5000":
+      name: "COGS - Cloud Infrastructure"
+      account_type: "cogs"
+      driver: "revenue_percentage"
+      percentage: 0.25
+    "5001":
+      name: "COGS - Support Labor"
+      account_type: "cogs"
+      driver: "headcount"
+    "COGS-INFRA":
+      name: "Cloud Infrastructure Costs"
+      account_type: "cogs"
+  operating_expenses:
+    "6000":
+      name: "Sales & Marketing"
+      account_type: "opex"
+      category: "sales_marketing"
+    "6100":
+      name: "Research & Development"
+      account_type: "opex"
+      category: "rnd"
+    "6200":
+      name: "General & Administrative"
+      account_type: "opex"
+      category: "ga"
+
+# Industry: Manufacturing
+manufacturing:
+  industry_name: "Manufacturing"
+  revenue_accounts:
+    "1000":
+      name: "Product Sales Revenue"
+      account_type: "revenue"
+      product_line: "products"
+    "1100":
+      name: "Warranty Revenue"
+      account_type: "revenue"
+      product_line: "services"
+  cogs_accounts:
+    "2000":
+      name: "COGS - Raw Materials"
+      account_type: "cogs"
+      sublevel: "raw_materials"
+    "2100":
+      name: "COGS - Direct Labor"
+      account_type: "cogs"
+      sublevel: "direct_labor"
+    "2200":
+      name: "COGS - Manufacturing Overhead"
+      account_type: "cogs"
+      sublevel: "overhead"
+    "2300":
+      name: "COGS - Depreciation Equipment"
+      account_type: "cogs"
+      is_depreciation: true
+      sublevel: "depreciation"
+  operating_expenses:
+    "3000":
+      name: "Sales & Distribution"
+      account_type: "opex"
+      category: "sales_dist"
+    "3100":
+      name: "Engineering"
+      account_type: "opex"
+      category: "engineering"
+
+# Industry: Financial Services
+financial_services:
+  industry_name: "Financial Services"
+  revenue_accounts:
+    "4000":
+      name: "Interest Income"
+      account_type: "revenue"
+      sub_type: "interest"
+    "4100":
+      name: "Fee Income"
+      account_type: "revenue"
+      sub_type: "fees"
+    "4200":
+      name: "Trading Income"
+      account_type: "revenue"
+      sub_type: "trading"
+  cogs_accounts: {}
+  operating_expenses:
+    "6000":
+      name: "Personnel Expense"
+      account_type: "opex"
+      category: "personnel"
+
+# Adjustment Mappings (Common Across Industries)
+adjustments:
+  # Non-Recurring Items
+  stock_based_comp:
+    name: "Stock-Based Compensation"
+    keywords:
+      - "stock option"
+      - "restricted stock"
+      - "equity grant"
+      - "sbc"
+      - "share based"
+    adjustment_type: "add_back"
+    is_recurring: false
+    reason: "Non-cash expense; exclude to show operating profitability"
+    impact_on: ["ebitda", "adjusted_ebitda"]
+    
+  acquisition_integration:
+    name: "Acquisition/Integration Costs"
+    keywords:
+      - "acquisition"
+      - "integration"
+      - "deal fee"
+      - "transaction cost"
+      - "severance"
+    adjustment_type: "add_back"
+    is_recurring: false
+    reason: "One-time costs associated with M&A activity"
+    impact_on: ["ebitda"]
+    
+  restructuring:
+    name: "Restructuring Charges"
+    keywords:
+      - "restructuring"
+      - "impairment"
+      - "write-down"
+      - "asset writeoff"
+    adjustment_type: "add_back"
+    is_recurring: false
+    reason: "Non-recurring operational restructuring"
+    impact_on: ["ebitda"]
+
+  # Related Party & Normalization
+  related_party_costs:
+    name: "Related Party Transaction"
+    keywords:
+      - "affiliate"
+      - "related party"
+      - "intercompany"
+      - "parent company"
+      - "subsidiary"
+    adjustment_type: "normalize"
+    is_recurring: true
+    reason: "Normalize related party transactions to arm's length pricing"
+    impact_on: ["normalized_ebitda"]
+    suspicious_pattern: true
+    
+  owner_compensation:
+    name: "Owner/Sponsor Compensation"
+    keywords:
+      - "owner compensation"
+      - "sponsor fee"
+      - "management company fees"
+      - "equity sponsor"
+    adjustment_type: "normalize"
+    is_recurring: true
+    reason: "Remove sponsor-specific costs; normalize to market rates"
+    impact_on: ["normalized_ebitda"]
+    suspicious_pattern: true
+    
+  # Non-Cash Items
+  depreciation:
+    name: "Depreciation & Amortization"
+    keywords:
+      - "depreciation"
+      - "amortization"
+      - "da&a"
+      - "accum deprec"
+    adjustment_type: "add_back"
+    is_recurring: true
+    reason: "Non-cash; add back to calculate EBITDA"
+    impact_on: ["ebitda"]
+    
+  foreign_exchange:
+    name: "Foreign Exchange Gains/Losses"
+    keywords:
+      - "fx gain"
+      - "fx loss"
+      - "foreign exchange"
+      - "currency"
+      - "translation"
+    adjustment_type: "add_back"
+    is_recurring: false
+    reason: "Non-operational; exclude volatility from normalized results"
+    impact_on: ["normalized_ebitda"]
+
+  # Normalization Items
+  negative_revenue:
+    name: "Returns & Allowances"
+    keywords:
+      - "return"
+      - "allowance"
+      - "discount"
+      - "rebate"
+      - "credit memo"
+    adjustment_type: "normalize"
+    is_recurring: true
+    reason: "Normalize revenue recognition; separate returns from core sales"
+    impact_on: ["normalized_revenue"]
+    suspicious_pattern: true
+    
+  intercompany_elimination:
+    name: "Intercompany Elimination"
+    keywords:
+      - "intercompany"
+      - "consolidation"
+      - "elimination"
+      - "intra-"
+    adjustment_type: "eliminate"
+    is_recurring: false
+    reason: "Remove intercompany transactions in consolidated view"
+    impact_on: ["consolidated_only"]
+
+  # Basis Conversion
+  accrual_vs_cash:
+    name: "Accrual-to-Cash Adjustment"
+    keywords:
+      - "accrual"
+      - "cash basis"
+      - "receivable"
+      - "payable"
+      - "provision"
+    adjustment_type: "accrual_conversion"
+    is_recurring: true
+    reason: "Convert from accrual to cash basis (or vice versa)"
+    impact_on: ["cash_flow_analysis"]
+
+# Suspicious Patterns - Flag for Investigation
+suspicious_patterns:
+  related_party_spike:
+    name: "Related Party Transaction Spike"
+    trigger: "amount_change_percent"
+    threshold_percent: 50
+    keywords: ["related party", "affiliate", "intercompany"]
+    risk_level: "medium"
+    
+  unusual_reversal:
+    name: "Unusual Reversal Pattern"
+    trigger: "matching_reversals"
+    days_between: 15
+    risk_level: "high"
+    reason: "Identical amounts reversed within short timeframe may indicate improper accounting"
+    
+  large_round_amount:
+    name: "Large Round Number"
+    trigger: "round_number_percentage"
+    threshold: 100000
+    is_suspicious: true
+    risk_level: "low"
+    reason: "Very round numbers may indicate estimates rather than actuals"
+    
+  large_month_end_entry:
+    name: "Large Month-End Adjusting Entry"
+    trigger: "last_day_of_period_posting"
+    risk_level: "medium"
+    reason: "Material period-end entries warrant review for proper basis"
+    
+  negative_revenue:
+    name: "Significant Negative Revenue"
+    trigger: "account_type_mismatch"
+    account_type: "revenue"
+    has_negative_balance: true
+    threshold_percent: 5
+    risk_level: "medium"
+    reason: "Revenue accounts with large negative balances (returns) need investigation"
+
+# Energy Transition (Original Configuration)
 energy_transition:
+  industry_name: "Energy Transition"
   adjustments:
     non_recurring_dev:
       name: "Non-Recurring Development Costs"
@@ -8,6 +299,7 @@ energy_transition:
         - "interconnection"
         - "development fee"
       adjustment_type: "add_back"
+      reason: "One-time development costs not recurring in operations"
       
     owner_costs:
       name: "Owner/Sponsor Costs"
@@ -16,6 +308,7 @@ energy_transition:
         - "related party"
         - "management fee"
       adjustment_type: "normalize"
+      reason: "Normalize sponsor-related costs to market rates"
       
     regulatory_costs:
       name: "One-Time Regulatory Costs"
@@ -25,6 +318,7 @@ energy_transition:
         - "remediation"
         - "environmental"
       adjustment_type: "add_back"
+      reason: "Non-recurring regulatory compliance costs"
       
     financing_artifacts:
       name: "Financing Artifacts"
@@ -34,3 +328,4 @@ energy_transition:
         - "tax equity"
         - "structuring fee"
       adjustment_type: "exclude"
+      reason: "Financing-related non-operational items"
