@@ -13,10 +13,10 @@
 
 This is a **professional-grade financial analysis tool** that automatically:
 
-1. **🔍 Parses** trial balance data from CSV/Excel files
-2. **📊 Classifies** accounts into standard accounting categories
-3. **⚠️ Detects** suspicious or unusual accounting patterns
-4. **💰 Calculates** three levels of EBITDA:
+1. ** Parses** trial balance data from CSV/Excel files
+2. ** Classifies** accounts into standard accounting categories
+3. ** Detects** suspicious or unusual accounting patterns
+4. ** Calculates** three levels of EBITDA:
    - Reported EBITDA (from official financials)
    - Adjusted EBITDA (excluding one-time items)
    - Normalized EBITDA (industry-standard adjustments)
@@ -24,15 +24,15 @@ This is a **professional-grade financial analysis tool** that automatically:
 6. **📈 Generates** normalized financial views with detailed analytics
 
 ### Perfect For
-- 📌 Accountants & auditors doing financial normalization
-- 📌 Investment professionals analyzing companies
-- 📌 CFOs standardizing financial reporting
-- 📌 Financial analysts comparing companies across industries
-- 📌 Teams automating GL data processing
+-  Accountants & auditors doing financial normalization
+-  Investment professionals analyzing companies
+-  CFOs standardizing financial reporting
+-  Financial analysts comparing companies across industries
+-  Teams automating GL data processing
 
 ---
 
-## 🚀 Quick Start (2 Minutes)
+##  Quick Start (2 Minutes)
 
 ### 1. Clone & Navigate
 ```bash
@@ -68,7 +68,7 @@ ls -lh data/output/  # or results/ if you specified a different output dir
 
 ---
 
-## 📂 Project Structure at a Glance
+##  Project Structure at a Glance
 
 ```
 Personal-Model-Development/
@@ -87,7 +87,7 @@ Personal-Model-Development/
     │   │   └── sample_trial_balance.csv    ← Example GL data
     │   └── output/                    ← Results saved here
     ├── src/
-    │   ├── main.py                    ← ⭐ Entry point - run this
+    │   ├── main.py                    ←  Entry point - run this
     │   ├── ingestion/                 ← Parse GL data
     │   ├── classification/            ← Classify accounts
     │   ├── normalization/             ← Calculate EBITDA
@@ -100,7 +100,7 @@ Personal-Model-Development/
 
 ---
 
-## ⚡ Usage Examples
+##  Usage Examples
 
 ### Example 1: Basic Processing
 ```bash
@@ -154,36 +154,36 @@ python src/main.py --help
 
 ---
 
-## 🎯 Key Features
+##  Key Features
 
-### ✅ Supported Formats
+###  Supported Formats
 - CSV files with flexible column mapping
 - Excel files (.xlsx, .xls) via openpyxl
 - Auto-detection of standard column names
 
-### ✅ Account Classification
+###  Account Classification
 - **11 account types**: Revenue, COGS, OpEx, Depreciation, Interest, Assets, Liabilities, Equity, etc.
 - **3 industry templates**: SaaS, Manufacturing, Financial Services
 - **Extensible**: Easy to add your own industries in YAML
 
-### ✅ Pattern Detection
-- 🚩 Negative revenue (potential returns/allowances)
-- 🚩 Large round numbers (potential estimates)
-- 🚩 Related party transactions
-- 🚩 Unusual account combinations
+###  Pattern Detection
+-  Negative revenue (potential returns/allowances)
+-  Large round numbers (potential estimates)
+-  Related party transactions
+-  Unusual account combinations
 
-### ✅ EBITDA Calculations
+###  EBITDA Calculations
 - Reported EBITDA from raw GL
 - Adjusted EBITDA (non-recurring items)
 - Normalized EBITDA (industry standard)
 - Full adjustment impact analysis
 
-### ✅ Multi-Entity Support
+###  Multi-Entity Support
 - Consolidate multiple legal entities
 - Eliminate intercompany transactions
 - Support 5 currencies (USD, EUR, GBP, CAD, MXN)
 
-### ✅ Professional Quality
+###  Professional Quality
 - Comprehensive error handling
 - Detailed logging for debugging
 - 25+ automated tests
@@ -192,7 +192,7 @@ python src/main.py --help
 
 ---
 
-## 📖 Documentation
+##  Documentation
 
 All documentation is in the root directory:
 
@@ -208,7 +208,7 @@ All documentation is in the root directory:
 
 ---
 
-## 🧪 Testing
+##  Testing
 
 ### Run All Tests
 ```bash
@@ -243,7 +243,7 @@ python test_imports.py
 
 ---
 
-## 💡 How It Works
+##  How It Works
 
 ```
 Input: Trial Balance CSV
@@ -265,7 +265,7 @@ Each step is independent and can be used separately or together.
 
 ---
 
-## 📊 Technology Stack
+##  Technology Stack
 
 | Component | Technology | Version |
 |-----------|-----------|---------|
@@ -277,7 +277,7 @@ Each step is independent and can be used separately or together.
 
 ---
 
-## 🔧 Configuration
+##  Configuration
 
 Edit `financial-normalizer/config/categories.yaml` to:
 - Add your own industries
@@ -312,7 +312,7 @@ python src/main.py --industry your_industry
 
 ---
 
-## 📋 Prerequisites
+##  Prerequisites
 
 - **Python 3.12+** (older versions may work but untested)
 - **pip** (Python package manager)
@@ -327,7 +327,7 @@ python3 --version
 
 ---
 
-## 🔄 Workflow & Use Cases
+##  Workflow & Use Cases
 
 ### Use Case 1: Quick Financial Analysis
 ```bash
@@ -358,7 +358,7 @@ Process multiple files at once.
 
 ---
 
-## 📈 Sample Output
+##  Sample Output
 
 When you run the application, you get 4 CSV files:
 
@@ -376,7 +376,7 @@ Normalized income statement
 
 ---
 
-## 🎓 Learning Path
+##  Learning Path
 
 **Day 1 (30 minutes)**
 1. Read this README
@@ -396,7 +396,7 @@ Normalized income statement
 
 ---
 
-## ⚙️ Installation Troubleshooting
+##  Installation Troubleshooting
 
 ### Issue: "Python not found"
 ```bash
@@ -427,7 +427,7 @@ See [QUICK_START.md](QUICK_START.md) for more troubleshooting.
 
 ---
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 - How to report issues
@@ -437,13 +437,13 @@ We welcome contributions! Please see [CONTRIBUTING.md](CONTRIBUTING.md) for:
 
 ---
 
-## 📄 License
+##  License
 
 This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for details.
 
 ---
 
-## 🚀 Getting Started Now
+##  Getting Started Now
 
 1. **Clone the repo**: `git clone <repo-url>`
 2. **Install dependencies**: `pip install -r financial-normalizer/requirements.txt`
@@ -453,7 +453,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ---
 
-## 📞 Questions?
+##  Questions?
 
 - **How do I use it?** → [QUICK_START.md](QUICK_START.md)
 - **How does it work?** → [DEVELOPMENT.md](DEVELOPMENT.md)
@@ -462,7 +462,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ---
 
-## 🎯 Project Status
+##  Project Status
 
 | Component | Status |
 |-----------|--------|
@@ -478,7 +478,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ---
 
-## 📚 In This Repository
+##  In This Repository
 
 ```
 ✅ = Complete and working well
@@ -495,7 +495,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ---
 
-## 🌟 Highlights
+##  Highlights
 
 - 🔹 **Production Ready** - Used in real financial analysis
 - 🔹 **Well Tested** - 25+ automated tests
@@ -507,7 +507,7 @@ This project is licensed under the **MIT License** - see [LICENSE](LICENSE) for 
 
 ---
 
-## 🔮 Future Enhancements
+##  Future Enhancements
 
 Planned improvements:
 - [ ] Excel export with formatting
@@ -519,7 +519,7 @@ Planned improvements:
 
 ---
 
-## 📧 Contact & Support
+##  Contact & Support
 
 For questions or issues:
 1. Check the documentation (links above)
@@ -529,6 +529,6 @@ For questions or issues:
 
 ---
 
-**Made with ❤️ for financial professionals**
+**Made with  for financial professionals**
 
-⭐ If you find this useful, consider starring the repository!
+ If you find this useful, consider starring the repository!
