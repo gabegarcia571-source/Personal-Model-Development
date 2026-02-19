@@ -9,7 +9,7 @@
 
 ---
 
-## 📋 What This Project Does
+##  What This Project Does
 
 This is a **professional-grade financial analysis tool** that automatically:
 
@@ -20,8 +20,8 @@ This is a **professional-grade financial analysis tool** that automatically:
    - Reported EBITDA (from official financials)
    - Adjusted EBITDA (excluding one-time items)
    - Normalized EBITDA (industry-standard adjustments)
-5. **🏢 Consolidates** multi-entity financial statements
-6. **📈 Generates** normalized financial views with detailed analytics
+5. ** Consolidates** multi-entity financial statements
+6. ** Generates** normalized financial views with detailed analytics
 
 ### Perfect For
 -  Accountants & auditors doing financial normalization
