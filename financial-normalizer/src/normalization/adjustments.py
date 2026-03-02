@@ -104,7 +104,7 @@ class AdjustmentCalculator:
         Args:
             gl_data: DataFrame with columns: Account_Code, Account_Name, Amount, etc.
         """
-        self.gl_data = gl_data or pd.DataFrame()
+        self.gl_data = gl_data if gl_data is not None else pd.DataFrame()
         self.adjustments: List[AdjustmentDetail] = []
         self.ebitda_components = {
             'revenue': [],

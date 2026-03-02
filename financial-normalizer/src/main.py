@@ -26,6 +26,7 @@ from ingestion.trial_balance_parser import TrialBalanceParser
 from classification.classifier import ClassificationEngine
 from normalization.adjustments import AdjustmentCalculator, AdjustmentDetail, AdjustmentCategory
 from normalization.engine import NormalizedViewEngine, NormalizedViewConfig
+from normalization.metrics import FinancialMetricsEngine
 
 
 def parse_arguments():
@@ -62,6 +63,10 @@ Examples:
                        action='store_true',
                        default=True,
                        help='Detect suspicious accounting patterns')
+    parser.add_argument('--ev',
+                       type=float,
+                       default=None,
+                       help='Enterprise value for valuation metrics (optional)')
     parser.add_argument('--verbose', '-v',
                        action='store_true',
                        help='Verbose output')
@@ -173,7 +178,7 @@ def main():
         )
         
         engine = NormalizedViewEngine(config)
-        normalized_view = engine.generate_normalized_view(df_classified)
+        normalized_view = engine.generate_view(str(parsed_output))
         logger.info("Generated normalized view")
         
         # Save summary
@@ -184,6 +189,32 @@ def main():
             logger.info(f"Saved normalized view to {summary_output}")
         else:
             print(f"   ℹ Normalized view is empty (check input data)")
+
+        # Step 5: Calculate financial metrics using FinancialMetricsEngine
+        print("\n[5/5] Calculating financial metrics...")
+        logger.info("Calculating financial metrics")
+        try:
+            metrics_engine = FinancialMetricsEngine(normalized_view, enterprise_value=args.ev)
+            metrics_report = metrics_engine.get_full_report()
+
+            print("   ✓ Financial Metrics Report:")
+            # Print sections: profitability, health, valuation
+            for section in ('profitability', 'health', 'valuation'):
+                section_data = metrics_report.get(section, {})
+                print(f"\n      {section.capitalize()}:")
+                for metric_key, metric_val in section_data.items():
+                    # Format label
+                    if metric_key.endswith('_%'):
+                        label = metric_key[:-2].replace('_', ' ').title()
+                        val_str = "N/A" if metric_val is None else f"{metric_val:.2f}%"
+                    else:
+                        label = metric_key.replace('_', ' ').title()
+                        val_str = "N/A" if metric_val is None else f"{metric_val:.2f}"
+
+                    print(f"        {label}: {val_str}")
+        except Exception as e:
+            logger.warning(f"Failed to calculate financial metrics: {e}")
+            print("   ⚠ Failed to calculate financial metrics (see logs)")
         
         # Final summary
         print("\n" + "="*80)
