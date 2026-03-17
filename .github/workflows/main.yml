@@ -26,9 +26,9 @@ jobs:
     - name: Run tests
       run: |
         cd financial-normalizer
-        python tests/run_tests.py
+        python run_tests.py
     
     - name: Verify setup
       run: |
         cd financial-normalizer
-        python tests/verify_setup.py
+        python verify_setup.py
