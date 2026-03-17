@@ -54,6 +54,7 @@ class AdjustmentDetail:
     source_doc: str = ""
     approved_by: str = ""
     effective_date: str = ""
+    accounting_impact: str = ""
     
     def __post_init__(self):
         if not self.accounting_impact:
@@ -104,7 +105,7 @@ class AdjustmentCalculator:
         Args:
             gl_data: DataFrame with columns: Account_Code, Account_Name, Amount, etc.
         """
-        self.gl_data = gl_data or pd.DataFrame()
+        self.gl_data = gl_data if gl_data is not None else pd.DataFrame()
         self.adjustments: List[AdjustmentDetail] = []
         self.ebitda_components = {
             'revenue': [],
@@ -147,7 +148,7 @@ class AdjustmentCalculator:
                 )
                 self.add_adjustment(adj)
                 added += 1
-            except Exception as e:
+            except (TypeError, ValueError, KeyError) as e:
                 logger.warning(f"Failed to add adjustment from row: {e}")
                 continue
         
@@ -557,5 +558,5 @@ if __name__ == "__main__":
     calc.add_adjustment(adj1)
     calc.add_adjustment(adj2)
     
-    print("Adjustment Summary:")
-    print(calc.get_adjustment_impact_analysis())
+    logger.info("Adjustment Summary:")
+    logger.info(calc.get_adjustment_impact_analysis())

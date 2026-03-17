@@ -26,7 +26,7 @@ def test_imports():
             exec(import_stmt)
             print(f"✓ {name:<30} ... OK")
             passed += 1
-        except Exception as e:
+        except (ImportError, ModuleNotFoundError, AttributeError, NameError, TypeError, ValueError, RuntimeError, OSError, SyntaxError) as e:
             print(f"✗ {name:<30} ... FAILED")
             print(f"  Error: {str(e)}")
             traceback.print_exc()

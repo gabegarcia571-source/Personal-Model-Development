@@ -3,6 +3,7 @@ from datetime import datetime
 from typing import List, Optional
 import pandas as pd
 import logging
+import warnings
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -15,6 +16,10 @@ class Transaction:
     amount: float
     entity: Optional[str] = None
 
+
+class TrialBalanceImbalanceWarning(UserWarning):
+    """Raised when debit/credit totals exceed configured tolerance."""
+
 class TrialBalanceParser:
     COLUMN_MAPPINGS = {
         'account': ['account', 'account name', 'gl account', 'account_name'],
@@ -26,8 +31,9 @@ class TrialBalanceParser:
         'entity': ['entity', 'company', 'legal_entity']
     }
     
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, imbalance_tolerance: float = 0.01):
         self.file_path = file_path
+        self.imbalance_tolerance = imbalance_tolerance
         
     def parse(self) -> List[Transaction]:
         logger.info(f"Parsing file: {self.file_path}")
@@ -63,6 +69,11 @@ class TrialBalanceParser:
                 raise ValueError("No amount, debit, or credit columns found")
         else:
             df['amount'] = pd.to_numeric(df['amount'], errors='coerce')
+
+        invalid_amount_rows = df['amount'].isna().sum()
+        if invalid_amount_rows:
+            logger.warning(f"Dropping {invalid_amount_rows} rows with invalid amount values")
+            df = df[df['amount'].notna()].copy()
         
         # Parse dates
         if 'date' in df.columns:
@@ -93,10 +104,42 @@ class TrialBalanceParser:
         if 'debit' in df.columns and 'credit' in df.columns:
             total_debits = df['debit'].sum()
             total_credits = df['credit'].sum()
-            if abs(total_debits - total_credits) > 0.01:
-                logger.warning(f"Debits ({total_debits:,.2f}) and Credits ({total_credits:,.2f}) don't balance")
+            imbalance = total_debits - total_credits
+            if abs(imbalance) > self.imbalance_tolerance:
+                warning_message = self._build_imbalance_warning(df, total_debits, total_credits, imbalance)
+                logger.warning(warning_message)
+                warnings.warn(warning_message, TrialBalanceImbalanceWarning)
         
         return transactions
+
+    def _build_imbalance_warning(
+        self,
+        df: pd.DataFrame,
+        total_debits: float,
+        total_credits: float,
+        imbalance: float,
+    ) -> str:
+        """Create detailed imbalance warning with top contributing accounts."""
+        contribution_df = df.copy()
+        contribution_df['line_imbalance'] = contribution_df['debit'].fillna(0) - contribution_df['credit'].fillna(0)
+        contribution_df['abs_line_imbalance'] = contribution_df['line_imbalance'].abs()
+
+        top_rows = contribution_df.sort_values('abs_line_imbalance', ascending=False).head(5)
+        contributors = []
+        for _, row in top_rows.iterrows():
+            account = str(row.get('account', 'UNKNOWN'))
+            description = str(row.get('description', 'UNKNOWN'))
+            line_imbalance = float(row.get('line_imbalance', 0.0))
+            contributors.append(f"{account} ({description}): {line_imbalance:,.2f}")
+
+        contributor_text = "; ".join(contributors) if contributors else "No contributing accounts identified"
+        return (
+            "FORMAL IMBALANCE WARNING | "
+            f"Debits={total_debits:,.2f}, Credits={total_credits:,.2f}, "
+            f"Imbalance={imbalance:,.2f}, Tolerance={self.imbalance_tolerance:,.2f}. "
+            f"Contributing accounts: {contributor_text}. "
+            "Recommended action: review source trial balance data and correct unmatched entries before normalization."
+        )
     
     def _map_columns(self, columns: pd.Index) -> dict:
         column_map = {}

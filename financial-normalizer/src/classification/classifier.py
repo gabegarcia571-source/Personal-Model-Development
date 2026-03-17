@@ -10,8 +10,8 @@ Classifies accounts for normalization purposes:
 import pandas as pd
 import yaml
 import logging
-from typing import Dict, List, Optional, Tuple, Set
-from dataclasses import dataclass, asdict
+from typing import Dict, List, Optional, Tuple
+from dataclasses import dataclass
 from enum import Enum
 from pathlib import Path
 
@@ -81,9 +81,9 @@ class ClassificationEngine:
     def __init__(self, config_path: str = None):
         """Initialize with classification rules from YAML config"""
         if config_path is None:
-            config_path = "/workspaces/Personal-Model-Development/financial-normalizer/config/categories.yaml"
+            config_path = Path(__file__).resolve().parents[2] / "config" / "categories.yaml"
         
-        self.config_path = config_path
+        self.config_path = str(config_path)
         self.config = self._load_config()
         self.keyword_index = self._build_keyword_index()
         self.suspicious_rules = self._extract_suspicious_patterns()
@@ -346,18 +346,28 @@ class ClassificationEngine:
         
         Returns DataFrame with added classification columns
         """
+        if account_code_col not in df.columns or account_name_col not in df.columns:
+            missing = [
+                col for col in (account_code_col, account_name_col)
+                if col not in df.columns
+            ]
+            raise ValueError(f"Missing required columns for classification: {missing}")
+
         classifications = []
-        
-        for _, row in df.iterrows():
-            account_code = row.get(account_code_col)
-            account_name = row.get(account_name_col)
-            
+        unique_accounts = df[[account_code_col, account_name_col]].drop_duplicates()
+
+        for _, row in unique_accounts.iterrows():
+            account_code = row[account_code_col]
+            account_name = row[account_name_col]
+
             if pd.isna(account_code) or pd.isna(account_name):
                 continue
-            
-            classification = self.classify_account(str(account_code), 
-                                                   str(account_name),
-                                                   industry)
+
+            classification = self.classify_account(
+                str(account_code),
+                str(account_name),
+                industry,
+            )
             classifications.append(classification)
         
         # Build result DataFrame
@@ -374,15 +384,24 @@ class ClassificationEngine:
             })
         
         result_df = pd.DataFrame(result)
-        
-        # Merge with original
-        if len(result_df) > 0:
-            result_df = df.merge(result_df, 
-                                left_on=[account_code_col, account_name_col],
-                                right_on=['Account_Code', 'Account_Name'],
-                                how='left')
-        
-        return result_df
+
+        if result_df.empty:
+            return df.copy()
+
+        # Merge one classification per unique account to avoid cartesian row multiplication.
+        classified_df = df.merge(
+            result_df,
+            left_on=[account_code_col, account_name_col],
+            right_on=['Account_Code', 'Account_Name'],
+            how='left',
+            suffixes=('', '_classified')
+        )
+
+        for duplicate_col in ('Account_Code_classified', 'Account_Name_classified'):
+            if duplicate_col in classified_df.columns:
+                classified_df = classified_df.drop(columns=[duplicate_col])
+
+        return classified_df
 
 
 def classify_transaction_dataset(input_path: str, 
@@ -440,10 +459,13 @@ if __name__ == "__main__":
         ("REV-RETURNS", "Sales Returns & Allowances"),
     ]
     
-    print("Sample Classifications:\n")
+    logger.info("Sample Classifications:")
     for code, name in test_accounts:
         result = classifier.classify_account(code, name)
-        print(f"{code} - {name}")
-        print(f"  Type: {result.account_type.value}")
-        print(f"  Adjustment: {result.adjustment_name} ({result.adjustment_type.value if result.adjustment_type else 'None'})")
-        print()
+        logger.info("%s - %s", code, name)
+        logger.info("  Type: %s", result.account_type.value)
+        logger.info(
+            "  Adjustment: %s (%s)",
+            result.adjustment_name,
+            result.adjustment_type.value if result.adjustment_type else 'None',
+        )

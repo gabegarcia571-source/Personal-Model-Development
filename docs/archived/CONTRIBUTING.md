@@ -1,3 +1,4 @@
+````markdown
 # Contributing to Personal Model Development
 
 Thank you for your interest in contributing! This document provides guidelines and instructions for contributing to the Financial Statement Normalization Engine.
@@ -167,12 +168,6 @@ def standalone_function(data: pd.DataFrame) -> pd.DataFrame:
     return data
 ```
 
-### Documentation
-- Add docstrings to all public classes and functions
-- Use Google-style docstrings
-- Include type hints for parameters and returns
-- Add examples in docstrings for complex functions
-
 ---
 
 ## 📝 Commit Guidelines
@@ -295,7 +290,7 @@ Closes #issue_number
    - operating_expenses
 3. Test: python src/main.py --industry your_industry
 4. Document in DEVELOPMENT.md
-5. Add test data if possible
+5. Add sample data if possible
 ```
 
 ### Fixing a Bug
@@ -398,11 +393,4 @@ Don't:
 
 Thank you for contributing to make this project better! All contributions, no matter how small, are appreciated.
 
----
-
-## 📞 Questions?
-
-- **Code style?** → See [DEVELOPMENT.md](DEVELOPMENT.md)
-- **How does X work?** → See [PROJECT_REVIEW.md](PROJECT_REVIEW.md)
-- **How do I test?** → Run `python run_tests.py`
-- **General help?** → Check [QUICK_START.md](QUICK_START.md)
+````

@@ -1,3 +1,4 @@
+````markdown
 # Project Review Checklist & Action Items
 
 ## ✅ What's Been Reviewed & Verified
@@ -351,9 +352,8 @@ To understand this application:
    - Run `python verify_setup.py`
    - Run `python src/main.py --help`
 
-2. **Core Concepts (1 hour total)**
-   - Review [src/main.py](financial-normalizer/src/main.py) - see the workflow
-   - Look at sample data
+2. **Core Concepts (1 hour total)**n+   - Review [src/main.py](financial-normalizer/src/main.py) - see the workflow
+   - Then look at sample data
    - Run `python run_tests.py` and review output
 
 3. **Implementation Details (2-3 hours)**
@@ -380,7 +380,7 @@ Your project is **well-structured and working**. What's been provided:
 - Sample data and configuration
 
 ### ⚠️ Partial
-- Export (stub exists, needs implementation)
+- Export Module (stub exists, needs implementation)
 - Tests (framework created, needs more tests)
 
 ### 📝 Next Priority
@@ -398,15 +398,4 @@ Your project is **well-structured and working**. What's been provided:
 4. **Tests failing?** - Run `python verify_setup.py`
 5. **Want to extend?** - See "Customization" section above
 
----
-
-**Ready to proceed?**
-
-```bash
-cd financial-normalizer
-python verify_setup.py        # Verify setup
-python src/main.py --ebitda   # Process sample data
-ls data/output/               # Check results
-```
-
-Good luck! 🚀
+````
