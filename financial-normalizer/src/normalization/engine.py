@@ -16,11 +16,18 @@ from dataclasses import dataclass, field, asdict
 from datetime import datetime
 import logging
 
-from classification.classifier import ClassificationEngine, AccountClassification, AccountType
-from normalization.adjustments import (
-    AdjustmentCalculator, AdjustmentDetail, AdjustmentCategory,
-    EBITDACalculation, EBITDAMetric, ConsolidationEngine
-)
+try:
+    from classification.classifier import ClassificationEngine, AccountClassification, AccountType
+    from normalization.adjustments import (
+        AdjustmentCalculator, AdjustmentDetail, AdjustmentCategory,
+        EBITDACalculation, EBITDAMetric, ConsolidationEngine
+    )
+except ModuleNotFoundError:
+    from src.classification.classifier import ClassificationEngine, AccountClassification, AccountType
+    from src.normalization.adjustments import (
+        AdjustmentCalculator, AdjustmentDetail, AdjustmentCategory,
+        EBITDACalculation, EBITDAMetric, ConsolidationEngine
+    )
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -225,7 +232,7 @@ class NormalizedViewEngine:
             account_code = str(row.get('Account_Code', ''))
             account_name = str(row.get('Account_Name', ''))
             
-            if account_code and account_name not in classifications:
+            if account_name and account_name not in classifications:
                 classification = self.classifier.classify_account(
                     account_code,
                     account_name,
@@ -245,8 +252,19 @@ class NormalizedViewEngine:
         adjustments = []
         for _, row in adj_df.iterrows():
             try:
-                # Try to parse from various column names
-                amount = float(row.get('Amount') or row.get('Debit') or row.get('Credit') or 0)
+                # Handle zero values explicitly to avoid incorrect fallback via boolean coercion.
+                if pd.notna(row.get('Amount')):
+                    amount = float(row.get('Amount'))
+                elif pd.notna(row.get('Debit')):
+                    amount = float(row.get('Debit'))
+                elif pd.notna(row.get('Credit')):
+                    amount = -float(row.get('Credit'))
+                else:
+                    amount = 0.0
+
+                is_recurring = row.get('Is_Recurring', True)
+                if isinstance(is_recurring, str):
+                    is_recurring = is_recurring.strip().lower() in {'true', '1', 'yes', 'y'}
                 
                 adj = AdjustmentDetail(
                     adjustment_id=str(row.get('Adjustment_ID') or row.get('Journal_Entry_ID') or 'ADJ'),
@@ -258,10 +276,10 @@ class NormalizedViewEngine:
                     account_name=str(row.get('Account_Name') or ''),
                     amount=amount,
                     reason=str(row.get('Reason') or ''),
-                    is_recurring=row.get('Is_Recurring', True),
+                    is_recurring=is_recurring,
                 )
                 adjustments.append(adj)
-            except Exception as e:
+            except (TypeError, ValueError, KeyError) as e:
                 logger.warning(f"Skipped adjustment row: {e}")
         
         return adjustments, adj_df
@@ -456,4 +474,4 @@ if __name__ == "__main__":
     )
     
     engine = NormalizedViewEngine(config)
-    print("NormalizedViewEngine ready for use")
+    logger.info("NormalizedViewEngine ready for use")

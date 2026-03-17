@@ -1,0 +1,53 @@
+# Financial Normalizer — Runtime Configuration
+#
+# All values here are defaults. Each can be overridden by an environment variable:
+#   FINORM_LOG_LEVEL            -> logging.log_level
+#   FINORM_IMBALANCE_TOLERANCE  -> pipeline.imbalance_tolerance
+#   FINORM_ANOMALY_THRESHOLD    -> anomaly.threshold_pct
+#   FINORM_DEFAULT_INDUSTRY     -> pipeline.default_industry
+#   FINORM_OUTPUT_DIR           -> pipeline.output_dir
+#   FINORM_MAX_FILE_SIZE_MB     -> ingestion.max_file_size_mb
+#   PORT                        -> ui.port
+
+# ---------------------------------------------------------------------------
+# Logging
+# ---------------------------------------------------------------------------
+logging:
+  log_level: "INFO"          # DEBUG | INFO | WARNING | ERROR
+  format: "%(asctime)s %(levelname)-8s %(name)s — %(message)s"
+  date_format: "%Y-%m-%d %H:%M:%S"
+
+# ---------------------------------------------------------------------------
+# Pipeline defaults
+# ---------------------------------------------------------------------------
+pipeline:
+  imbalance_tolerance: 0.01      # maximum acceptable debit/credit imbalance ratio
+  default_industry: null         # null = use generic defaults; see benchmarks.yaml for valid keys
+  output_dir: "data/output"
+  ebitda: true
+  detect_patterns: true
+
+# ---------------------------------------------------------------------------
+# Anomaly detection
+# ---------------------------------------------------------------------------
+anomaly:
+  threshold_pct: 10.0            # delta % that triggers anomaly highlight in compare view
+
+# ---------------------------------------------------------------------------
+# Ingestion
+# ---------------------------------------------------------------------------
+ingestion:
+  max_file_size_mb: 50           # reject uploads larger than this
+  supported_extensions:
+    - ".csv"
+    - ".xlsx"
+    - ".xls"
+    - ".pdf"
+    - ".xml"
+    - ".xbrl"
+
+# ---------------------------------------------------------------------------
+# UI
+# ---------------------------------------------------------------------------
+ui:
+  port: 8501

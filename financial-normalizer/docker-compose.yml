@@ -1,0 +1,36 @@
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: financial-normalizer-app
+    ports:
+      - "${PORT:-8501}:${PORT:-8501}"
+    environment:
+      PORT: ${PORT:-8501}
+      FINORM_LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      FINORM_DEFAULT_INDUSTRY: ${INDUSTRY:-}
+      FINORM_IMBALANCE_TOLERANCE: ${IMBALANCE_TOLERANCE:-0.01}
+      FINORM_ANOMALY_THRESHOLD: ${ANOMALY_THRESHOLD:-10}
+      FINORM_OUTPUT_DIR: /app/data/output
+    volumes:
+      - ./data/input:/app/data/input
+      - ./data/output:/app/data/output
+    command: ["sh", "-c", "streamlit run app/streamlit_app.py --server.address=0.0.0.0 --server.port=${PORT:-8501}"]
+
+  cli:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: financial-normalizer-cli
+    environment:
+      FINORM_LOG_LEVEL: ${LOG_LEVEL:-INFO}
+      FINORM_DEFAULT_INDUSTRY: ${INDUSTRY:-}
+      FINORM_IMBALANCE_TOLERANCE: ${IMBALANCE_TOLERANCE:-0.01}
+      FINORM_ANOMALY_THRESHOLD: ${ANOMALY_THRESHOLD:-10}
+      FINORM_OUTPUT_DIR: /app/data/output
+      CLI_COMMAND: ${CLI_COMMAND:-validate}
+    volumes:
+      - ./data/input:/app/data/input
+      - ./data/output:/app/data/output
+    command: ["sh", "-c", "python src/main.py ${CLI_COMMAND:-validate}"]

@@ -23,8 +23,12 @@ Returns:
 """
 
 from typing import Optional, Dict, Any
-from normalization.engine import NormalizedFinancialView
 import logging
+
+try:
+    from normalization.engine import NormalizedFinancialView
+except ModuleNotFoundError:
+    from src.normalization.engine import NormalizedFinancialView
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -81,7 +85,7 @@ class FinancialMetricsEngine:
             margin = (gross_profit / revenue) * 100
             return round(margin, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate gross margin: {e}")
             return None
     
@@ -114,7 +118,7 @@ class FinancialMetricsEngine:
             margin = (ebitda / revenue) * 100
             return round(margin, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate EBITDA margin: {e}")
             return None
     
@@ -149,7 +153,7 @@ class FinancialMetricsEngine:
             margin = (ebit / revenue) * 100
             return round(margin, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate operating margin: {e}")
             return None
     
@@ -174,7 +178,7 @@ class FinancialMetricsEngine:
             margin = (net_income / revenue) * 100
             return round(margin, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate net margin: {e}")
             return None
     
@@ -204,7 +208,7 @@ class FinancialMetricsEngine:
             ratio = current_assets / current_liabilities
             return round(ratio, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate current ratio: {e}")
             return None
     
@@ -229,7 +233,7 @@ class FinancialMetricsEngine:
             ratio = total_debt / ebitda
             return round(ratio, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate debt to EBITDA: {e}")
             return None
     
@@ -254,7 +258,7 @@ class FinancialMetricsEngine:
             ratio = ebitda / interest_expense
             return round(ratio, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate interest coverage ratio: {e}")
             return None
     
@@ -284,7 +288,7 @@ class FinancialMetricsEngine:
             multiple = self.enterprise_value / ebitda
             return round(multiple, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate EV/EBITDA: {e}")
             return None
     
@@ -310,7 +314,7 @@ class FinancialMetricsEngine:
             multiple = self.enterprise_value / revenue
             return round(multiple, 2)
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not calculate EV/Revenue: {e}")
             return None
     
@@ -363,7 +367,7 @@ class FinancialMetricsEngine:
             revenue = float(revenue_row['Amount'].values[0])
             return revenue if revenue > 0 else None
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract revenue: {e}")
             return None
     
@@ -411,7 +415,7 @@ class FinancialMetricsEngine:
             net_income = ebitda - da - interest - taxes
             return net_income
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract net income: {e}")
             return None
     
@@ -440,7 +444,7 @@ class FinancialMetricsEngine:
             total = current_assets['Amount'].sum()
             return total if total > 0 else None
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract current assets: {e}")
             return None
     
@@ -469,7 +473,7 @@ class FinancialMetricsEngine:
             total = abs(current_liabilities['Amount'].sum())
             return total if total > 0 else None
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract current liabilities: {e}")
             return None
     
@@ -496,7 +500,7 @@ class FinancialMetricsEngine:
             total = abs(debt_accounts['Amount'].sum())
             return total if total > 0 else None
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract total debt: {e}")
             return None
     
@@ -523,6 +527,6 @@ class FinancialMetricsEngine:
             total = abs(interest_accounts['Amount'].sum())
             return total if total > 0 else None
         
-        except Exception as e:
+        except (TypeError, ValueError, ZeroDivisionError, KeyError, AttributeError) as e:
             logger.debug(f"Could not extract interest expense: {e}")
             return None

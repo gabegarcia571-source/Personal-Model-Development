@@ -1,0 +1,544 @@
+# Industry benchmark ranges for anomaly detection
+# Each metric entry: { min: float, max: float, unit: "%" | "x", description: str }
+# Ranges represent healthy operating band for established public companies.
+#
+# Metrics covered per industry:
+#   gross_margin   — gross profit / revenue × 100
+#   ebitda_margin  — EBITDA / revenue × 100
+#   opex_ratio     — operating expenses / revenue × 100
+#   revenue_growth — YoY revenue change %
+#   debt_to_equity — total debt / book equity (x)
+#   current_ratio  — current assets / current liabilities (x)
+
+# ---------------------------------------------------------------------------
+# Fallback defaults — applied when no industry is specified
+# ---------------------------------------------------------------------------
+defaults:
+  source: "Broad cross-sector medians from S&P 500 historical data"
+  gross_margin:
+    min: 10.0
+    max: 90.0
+    unit: "%"
+    description: "Gross profit as % of revenue"
+  ebitda_margin:
+    min: -5.0
+    max: 50.0
+    unit: "%"
+    description: "EBITDA as % of revenue"
+  opex_ratio:
+    min: 5.0
+    max: 80.0
+    unit: "%"
+    description: "Operating expenses as % of revenue"
+  revenue_growth:
+    min: -20.0
+    max: 100.0
+    unit: "%"
+    description: "Year-over-year revenue growth rate"
+  debt_to_equity:
+    min: 0.0
+    max: 5.0
+    unit: "x"
+    description: "Total debt / book equity"
+  interest_coverage_ratio:
+    min: 1.0
+    max: 20.0
+    unit: "x"
+    description: "EBIT / interest expense"
+  current_ratio:
+    min: 1.0
+    max: 5.0
+    unit: "x"
+    description: "Current assets / current liabilities"
+
+# ---------------------------------------------------------------------------
+# SaaS / Technology
+# ---------------------------------------------------------------------------
+saas_tech:
+  source: "BVP Cloud Index & public SaaS company medians (2020-2024)"
+  gross_margin:
+    min: 55.0
+    max: 90.0
+    unit: "%"
+    description: "SaaS gross margins typically 60-80%; high due to low COGS"
+  ebitda_margin:
+    min: -30.0
+    max: 45.0
+    unit: "%"
+    description: "Growth-stage SaaS may run negative EBITDA; mature SaaS 20-40%"
+  opex_ratio:
+    min: 40.0
+    max: 130.0
+    unit: "%"
+    description: "SaaS opex ratios can exceed revenue in early growth phase"
+  revenue_growth:
+    min: 5.0
+    max: 150.0
+    unit: "%"
+    description: "High-growth SaaS can exceed 100% YoY; mature 10-25%"
+  debt_to_equity:
+    min: 0.0
+    max: 3.0
+    unit: "x"
+    description: "Typically low leverage; some late-stage may carry convertible debt"
+  interest_coverage_ratio:
+    min: 1.5
+    max: 40.0
+    unit: "x"
+    description: "Mature SaaS has strong coverage; early-stage may be thin"
+  current_ratio:
+    min: 1.5
+    max: 10.0
+    unit: "x"
+    description: "High cash balances from equity raises drive elevated ratios"
+
+# ---------------------------------------------------------------------------
+# Traditional Software (on-premise, license-based)
+# ---------------------------------------------------------------------------
+traditional_software:
+  source: "S&P IT sector medians, Gartner enterprise software data (2018-2024)"
+  gross_margin:
+    min: 55.0
+    max: 85.0
+    unit: "%"
+    description: "License + maintenance model; margins lower than pure SaaS"
+  ebitda_margin:
+    min: 5.0
+    max: 35.0
+    unit: "%"
+    description: "Mature traditional software; lower R&D burn than SaaS"
+  opex_ratio:
+    min: 30.0
+    max: 80.0
+    unit: "%"
+    description: "Includes large sales force and professional services costs"
+  revenue_growth:
+    min: -5.0
+    max: 25.0
+    unit: "%"
+    description: "More predictable but slower than cloud-native peers"
+  debt_to_equity:
+    min: 0.0
+    max: 2.5
+    unit: "x"
+    description: "Moderate leverage; share buybacks may inflate D/E"
+  interest_coverage_ratio:
+    min: 2.0
+    max: 30.0
+    unit: "x"
+    description: "License-heavy software firms tend to maintain healthy coverage"
+  current_ratio:
+    min: 1.2
+    max: 4.0
+    unit: "x"
+    description: "Deferred revenue can depress current ratio appearance"
+
+# ---------------------------------------------------------------------------
+# E-Commerce / Retail
+# ---------------------------------------------------------------------------
+ecommerce_retail:
+  source: "NRF industry data, public retailer 10-K medians (2020-2024)"
+  gross_margin:
+    min: 20.0
+    max: 60.0
+    unit: "%"
+    description: "Pure e-commerce 40-60%; traditional retail 25-40%"
+  ebitda_margin:
+    min: 1.0
+    max: 20.0
+    unit: "%"
+    description: "Thin margins due to logistics, fulfillment, and returns costs"
+  opex_ratio:
+    min: 15.0
+    max: 55.0
+    unit: "%"
+    description: "Marketing spend can be very high in hyper-growth e-commerce"
+  revenue_growth:
+    min: -10.0
+    max: 60.0
+    unit: "%"
+    description: "Highly seasonal; COVID-era comps created unusual swings"
+  debt_to_equity:
+    min: 0.0
+    max: 3.5
+    unit: "x"
+    description: "Inventory financing and lease obligations drive leverage up"
+  interest_coverage_ratio:
+    min: 1.2
+    max: 15.0
+    unit: "x"
+    description: "Thin-margin retailers typically target low-double-digit coverage"
+  current_ratio:
+    min: 1.0
+    max: 3.5
+    unit: "x"
+    description: "Inventory-heavy balance sheets; 1.5-2.5 considered healthy"
+
+# ---------------------------------------------------------------------------
+# Healthcare / MedTech
+# ---------------------------------------------------------------------------
+healthcare_medtech:
+  source: "S&P Healthcare sector medians, Evaluate MedTech benchmarks (2019-2024)"
+  gross_margin:
+    min: 40.0
+    max: 80.0
+    unit: "%"
+    description: "Devices and diagnostics 50-70%; pharma distribution lower"
+  ebitda_margin:
+    min: 5.0
+    max: 35.0
+    unit: "%"
+    description: "R&D-intensive; early-stage platforms may run negative"
+  opex_ratio:
+    min: 20.0
+    max: 65.0
+    unit: "%"
+    description: "Clinical trials and regulatory costs weigh on opex"
+  revenue_growth:
+    min: -5.0
+    max: 40.0
+    unit: "%"
+    description: "Steady 5-12% for established players; high for novel devices"
+  debt_to_equity:
+    min: 0.0
+    max: 3.0
+    unit: "x"
+    description: "Moderate leverage; large medtech companies often carry term loans"
+  interest_coverage_ratio:
+    min: 1.5
+    max: 25.0
+    unit: "x"
+    description: "Coverage can vary around launch cycles and R&D spikes"
+  current_ratio:
+    min: 1.5
+    max: 5.0
+    unit: "x"
+    description: "Strong liquidity required for regulatory and trial obligations"
+
+# ---------------------------------------------------------------------------
+# Financial Services / Fintech
+# ---------------------------------------------------------------------------
+financial_services:
+  source: "FDIC call report medians, S&P Financial sector (2020-2024)"
+  gross_margin:
+    min: 20.0
+    max: 80.0
+    unit: "%"
+    description: "Net interest margin plus fee income; varies widely by lending mix"
+  ebitda_margin:
+    min: 5.0
+    max: 40.0
+    unit: "%"
+    description: "Traditional banks 20-30%; fintech may be negative in growth phase"
+  opex_ratio:
+    min: 20.0
+    max: 70.0
+    unit: "%"
+    description: "Efficiency ratios for banks target sub-55%; fintech can be higher"
+  revenue_growth:
+    min: -15.0
+    max: 40.0
+    unit: "%"
+    description: "Rate-sensitive; fintech can spike 30-40% during expansion"
+  debt_to_equity:
+    min: 0.0
+    max: 20.0
+    unit: "x"
+    description: "Banks routinely hold 8-12x leverage; insurance companies 3-6x"
+  interest_coverage_ratio:
+    min: 1.0
+    max: 10.0
+    unit: "x"
+    description: "Coverage for lenders can be lower due to spread-based models"
+  current_ratio:
+    min: 0.8
+    max: 3.0
+    unit: "x"
+    description: "Not primary metric for financial institutions; liquidity ratios preferred"
+
+# ---------------------------------------------------------------------------
+# Manufacturing
+# ---------------------------------------------------------------------------
+manufacturing:
+  source: "S&P Industrials sector, NIST Manufacturing Extension Partnership (2019-2024)"
+  gross_margin:
+    min: 10.0
+    max: 50.0
+    unit: "%"
+    description: "Highly input-cost dependent; discrete manufacturing 20-35%"
+  ebitda_margin:
+    min: 2.0
+    max: 25.0
+    unit: "%"
+    description: "Capital-intensive; depreciation adds back 3-8% to operating margins"
+  opex_ratio:
+    min: 5.0
+    max: 40.0
+    unit: "%"
+    description: "Lean manufacturing targets sub-20% overheads"
+  revenue_growth:
+    min: -10.0
+    max: 30.0
+    unit: "%"
+    description: "Tied to industrial cycles; secular manufacturing grows 3-8%"
+  debt_to_equity:
+    min: 0.0
+    max: 4.0
+    unit: "x"
+    description: "PP&E acquisition drives moderate-to-high leverage"
+  interest_coverage_ratio:
+    min: 1.5
+    max: 12.0
+    unit: "x"
+    description: "Coverage compresses during cyclic slowdowns"
+  current_ratio:
+    min: 1.2
+    max: 4.0
+    unit: "x"
+    description: "Inventory build cycles require adequate working capital"
+
+# ---------------------------------------------------------------------------
+# Energy / Utilities
+# ---------------------------------------------------------------------------
+energy_utilities:
+  source: "EIA financial data, S&P Energy/Utilities sector medians (2018-2024)"
+  gross_margin:
+    min: 20.0
+    max: 60.0
+    unit: "%"
+    description: "Upstream oil/gas 40-60%; utilities 25-40% pre-depreciation"
+  ebitda_margin:
+    min: 10.0
+    max: 55.0
+    unit: "%"
+    description: "Utilities typically 30-45%; oil producers volatile 20-55%"
+  opex_ratio:
+    min: 10.0
+    max: 55.0
+    unit: "%"
+    description: "Regulated utilities have relatively predictable opex structures"
+  revenue_growth:
+    min: -30.0
+    max: 40.0
+    unit: "%"
+    description: "Commodity price volatility causes high YoY swings in energy"
+  debt_to_equity:
+    min: 0.5
+    max: 6.0
+    unit: "x"
+    description: "Capital-intensive sector; regulated utilities carry 2-4x leverage"
+  interest_coverage_ratio:
+    min: 1.5
+    max: 10.0
+    unit: "x"
+    description: "Regulated utilities often target stable but moderate coverage"
+  current_ratio:
+    min: 0.8
+    max: 3.0
+    unit: "x"
+    description: "Utilities often run current ratios below 1 due to current debt structure"
+
+# ---------------------------------------------------------------------------
+# Real Estate
+# ---------------------------------------------------------------------------
+real_estate:
+  source: "NAREIT REIT industry data, S&P Real Estate sector (2019-2024)"
+  gross_margin:
+    min: 30.0
+    max: 75.0
+    unit: "%"
+    description: "Property NOI margins; commercial REITs typically 55-70%"
+  ebitda_margin:
+    min: 20.0
+    max: 60.0
+    unit: "%"
+    description: "FFO preferred; EBITDA 30-55% for REITs"
+  opex_ratio:
+    min: 15.0
+    max: 55.0
+    unit: "%"
+    description: "Property operating and management costs; G&A typically 5-15%"
+  revenue_growth:
+    min: -20.0
+    max: 30.0
+    unit: "%"
+    description: "Rent escalations 2-5%; acquisition-driven growth can spike"
+  debt_to_equity:
+    min: 0.5
+    max: 5.0
+    unit: "x"
+    description: "Mortgage leverage fundamental to real estate; typical 1.5-3.0x"
+  interest_coverage_ratio:
+    min: 1.2
+    max: 8.0
+    unit: "x"
+    description: "Property cash flows generally support moderate coverage levels"
+  current_ratio:
+    min: 0.5
+    max: 3.0
+    unit: "x"
+    description: "Not primary metric; debt maturity profile more relevant for REITs"
+
+# ---------------------------------------------------------------------------
+# Media / Entertainment
+# ---------------------------------------------------------------------------
+media_entertainment:
+  source: "S&P Communication Services sector, streaming company public filings (2020-2024)"
+  gross_margin:
+    min: 25.0
+    max: 75.0
+    unit: "%"
+    description: "Streaming content 40-60%; traditional media 30-50%"
+  ebitda_margin:
+    min: -20.0
+    max: 40.0
+    unit: "%"
+    description: "Streaming services invest heavily in content; may run negative"
+  opex_ratio:
+    min: 30.0
+    max: 85.0
+    unit: "%"
+    description: "Content and marketing costs are primary opex drivers"
+  revenue_growth:
+    min: -15.0
+    max: 50.0
+    unit: "%"
+    description: "Streaming grew 20-40%; legacy media declining 5-15% annually"
+  debt_to_equity:
+    min: 0.0
+    max: 5.0
+    unit: "x"
+    description: "Content financing and studio acquisitions drive leverage"
+  interest_coverage_ratio:
+    min: 1.0
+    max: 12.0
+    unit: "x"
+    description: "Coverage can swing with content investment cycles"
+  current_ratio:
+    min: 0.8
+    max: 3.5
+    unit: "x"
+    description: "Deferred revenue and content obligations affect working capital"
+
+# ---------------------------------------------------------------------------
+# Professional Services / Consulting
+# ---------------------------------------------------------------------------
+professional_services:
+  source: "IBIS World professional services data, S&P consulting sector medians (2019-2024)"
+  gross_margin:
+    min: 25.0
+    max: 65.0
+    unit: "%"
+    description: "People-cost intensive; billable utilization drives margins"
+  ebitda_margin:
+    min: 5.0
+    max: 25.0
+    unit: "%"
+    description: "Large consulting firms 12-20%; boutiques can vary widely"
+  opex_ratio:
+    min: 40.0
+    max: 80.0
+    unit: "%"
+    description: "Labour is 60-70% of revenue; overhead relatively lean"
+  revenue_growth:
+    min: -10.0
+    max: 25.0
+    unit: "%"
+    description: "Steady 3-8% organic; M&A can add 10-15% in acquisition years"
+  debt_to_equity:
+    min: 0.0
+    max: 2.5
+    unit: "x"
+    description: "Asset-light; leverage driven by share buybacks or acquisitions"
+  interest_coverage_ratio:
+    min: 2.0
+    max: 18.0
+    unit: "x"
+    description: "Project-driven cash flows usually support strong coverage"
+  current_ratio:
+    min: 1.0
+    max: 4.0
+    unit: "x"
+    description: "Receivables-heavy; collections velocity drives working capital"
+
+# ---------------------------------------------------------------------------
+# Consumer Goods / CPG
+# ---------------------------------------------------------------------------
+consumer_goods_cpg:
+  source: "Nielsen IQ CPG benchmarks, S&P Consumer Staples sector (2019-2024)"
+  gross_margin:
+    min: 30.0
+    max: 65.0
+    unit: "%"
+    description: "Branded CPG 45-60%; private label and commodities 30-40%"
+  ebitda_margin:
+    min: 8.0
+    max: 30.0
+    unit: "%"
+    description: "Large CPG companies (P&G, Unilever) target 18-25%"
+  opex_ratio:
+    min: 20.0
+    max: 50.0
+    unit: "%"
+    description: "Heavy advertising spend; distribution and trade promotions"
+  revenue_growth:
+    min: -5.0
+    max: 20.0
+    unit: "%"
+    description: "Mature categories grow 1-4%; premiumisation can drive 8-12%"
+  debt_to_equity:
+    min: 0.0
+    max: 4.0
+    unit: "x"
+    description: "Brand acquisitions drive periodic leverage spikes (1-3x typical)"
+  interest_coverage_ratio:
+    min: 1.8
+    max: 15.0
+    unit: "x"
+    description: "Large staples companies often maintain high-single to low-double-digit coverage"
+  current_ratio:
+    min: 0.8
+    max: 3.5
+    unit: "x"
+    description: "Inventory management critical; just-in-time reduces working capital"
+
+# ---------------------------------------------------------------------------
+# Industrials / Infrastructure
+# ---------------------------------------------------------------------------
+industrials_infrastructure:
+  source: "S&P Industrials sector, ASCE infrastructure investment data (2019-2024)"
+  gross_margin:
+    min: 15.0
+    max: 45.0
+    unit: "%"
+    description: "Infrastructure 20-35%; high-value industrials can reach 40%"
+  ebitda_margin:
+    min: 8.0
+    max: 30.0
+    unit: "%"
+    description: "Depreciation-heavy; EBITDA a better proxy than net income"
+  opex_ratio:
+    min: 15.0
+    max: 55.0
+    unit: "%"
+    description: "Backlog-driven; project execution efficiency dominates"
+  revenue_growth:
+    min: -15.0
+    max: 25.0
+    unit: "%"
+    description: "Government infrastructure cycles; secular growth 3-7%"
+  debt_to_equity:
+    min: 0.2
+    max: 4.5
+    unit: "x"
+    description: "Project finance and equipment leasing drive elevated leverage"
+  interest_coverage_ratio:
+    min: 1.5
+    max: 12.0
+    unit: "x"
+    description: "Coverage tied to contract backlog quality and execution"
+  current_ratio:
+    min: 1.0
+    max: 3.5
+    unit: "x"
+    description: "Contract receivables and unbilled revenue inflate current assets"

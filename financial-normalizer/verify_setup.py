@@ -25,11 +25,14 @@ class DualWriter:
 def validate():
     """Run validation checks"""
     
-    output_file = Path(__file__).parent / "financial-normalizer" / "verification_report.txt"
+    project_root = Path(__file__).parent
+    output_file = project_root / "verification_report.txt"
     output_file.parent.mkdir(parents=True, exist_ok=True)
+    original_stdout = sys.stdout
     
-    with open(output_file, 'w') as f:
-        writer = DualWriter(f)
+    try:
+        report_file = open(output_file, 'w')
+        writer = DualWriter(report_file)
         sys.stdout = writer
         
         report = []
@@ -38,10 +41,22 @@ def validate():
         print("FINANCIAL NORMALIZER - VERIFICATION REPORT")
         print("="*80)
         print()
+
+        # Check 0: Python runtime
+        print("[CHECK 0] Verifying Python version...")
+        current_version = f"{sys.version_info.major}.{sys.version_info.minor}.{sys.version_info.micro}"
+        if (sys.version_info.major, sys.version_info.minor) == (3, 12):
+            print(f"  ✓ Python {current_version} (required: 3.12)")
+            report.append(("Runtime", f"Python {current_version}", "PASS"))
+            print()
+        else:
+            print(f"  ✗ Python {current_version} (required: 3.12)")
+            report.append(("Runtime", f"Python {current_version}", "FAIL"))
+            return False
         
         # Check 1: Files exist
         print("[CHECK 1] Verifying project structure...")
-        sys.path.insert(0, str(Path(__file__).parent / "financial-normalizer"))
+        sys.path.insert(0, str(project_root))
         
         files_to_check = [
             "config/categories.yaml",
@@ -56,7 +71,7 @@ def validate():
         
         missing_files = []
         for file_path in files_to_check:
-            full_path = Path(__file__).parent / "financial-normalizer" / file_path
+            full_path = project_root / file_path
             if full_path.exists():
                 print(f"  ✓ {file_path}")
                 report.append(("File exists", file_path, "PASS"))
@@ -89,7 +104,7 @@ def validate():
                 __import__(module_name)
                 print(f"  ✓ {module_name:<40} ({description})")
                 report.append(("Import", module_name, "PASS"))
-            except Exception as e:
+            except (ImportError, ModuleNotFoundError, AttributeError, NameError, TypeError, ValueError, OSError, RuntimeError) as e:
                 print(f"  ✗ {module_name:<40} ERROR: {str(e)}")
                 import_errors.append((module_name, str(e)))
                 report.append(("Import", module_name, "FAIL"))
@@ -107,7 +122,7 @@ def validate():
         
         try:
             import yaml
-            config_path = Path(__file__).parent / "financial-normalizer" / "config" / "categories.yaml"
+            config_path = project_root / "config" / "categories.yaml"
             with open(config_path, 'r') as f:
                 config = yaml.safe_load(f)
             
@@ -119,7 +134,7 @@ def validate():
                     report.append(("Config", industry, "PASS"))
             
             print()
-        except Exception as e:
+        except (ImportError, OSError, ValueError, TypeError, yaml.YAMLError) as e:
             print(f"  ✗ Configuration error: {str(e)}")
             report.append(("Config", "categories.yaml", "FAIL"))
             return False
@@ -129,14 +144,14 @@ def validate():
         
         try:
             import pandas as pd
-            data_path = Path(__file__).parent / "financial-normalizer" / "data" / "input" / "sample_trial_balance.csv"
+            data_path = project_root / "data" / "input" / "sample_trial_balance.csv"
             df = pd.read_csv(data_path)
             
             print(f"  ✓ Sample data loaded: {len(df)} rows, {len(df.columns)} columns")
             print(f"    Columns: {', '.join(df.columns.tolist())}")
             report.append(("Sample Data", f"{len(df)} transactions", "PASS"))
             print()
-        except Exception as e:
+        except (ImportError, OSError, ValueError, TypeError, pd.errors.ParserError) as e:
             print(f"  ✗ Sample data error: {str(e)}")
             report.append(("Sample Data", "sample_trial_balance.csv", "FAIL"))
             return False
@@ -149,7 +164,7 @@ def validate():
             from src.classification.classifier import ClassificationEngine
             
             # Parse
-            data_path = Path(__file__).parent / "financial-normalizer" / "data" / "input" / "sample_trial_balance.csv"
+            data_path = project_root / "data" / "input" / "sample_trial_balance.csv"
             parser = TrialBalanceParser(str(data_path))
             transactions = parser.parse()
             print(f"  ✓ Parsed {len(transactions)} transactions")
@@ -178,7 +193,7 @@ def validate():
                 return False
             
             print()
-        except Exception as e:
+        except (ImportError, ModuleNotFoundError, OSError, ValueError, TypeError, AttributeError, KeyError) as e:
             print(f"  ✗ Functionality test error: {str(e)}")
             import traceback
             traceback.print_exc()
@@ -213,7 +228,7 @@ def validate():
             print(f"  {status_str} {cat:<20} {stats['pass']}/{stats['pass']+stats['fail']} passed")
         
         print("\n" + "="*80)
-        
+
         if fails == 0:
             print("✅ ALL CHECKS PASSED - YOUR PROJECT IS WORKING!")
             print("="*80)
@@ -222,11 +237,15 @@ def validate():
             print(f"⚠️ {fails} CHECKS FAILED - REVIEW ERRORS ABOVE")
             print("="*80)
             return False
+    finally:
+        sys.stdout = original_stdout
+        if 'report_file' in locals() and not report_file.closed:
+            report_file.close()
 
 
 if __name__ == "__main__":
     success = validate()
     # Print location of report
-    report_path = Path(__file__).parent / "financial-normalizer" / "verification_report.txt"
+    report_path = Path(__file__).parent / "verification_report.txt"
     print(f"\n📄 Full report saved to: {report_path}\n")
     sys.exit(0 if success else 1)

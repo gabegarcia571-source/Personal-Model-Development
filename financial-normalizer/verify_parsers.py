@@ -14,7 +14,7 @@ import pandas as pd
 from pathlib import Path
 
 # Add src to path
-sys.path.insert(0, str(Path(__file__).parent.parent))
+sys.path.insert(0, str(Path(__file__).parent / "src"))
 
 from classification.classifier import ClassificationEngine
 from ingestion.parsers import (
@@ -143,14 +143,14 @@ def verify_parser(parser_func, parser_name: str, test_file: str) -> bool:
             
             print(f"  ✓ ClassificationEngine added {len(added_cols)} columns: {added_cols}")
             
-        except Exception as e:
+        except (ImportError, ModuleNotFoundError, OSError, ValueError, TypeError, AttributeError, KeyError) as e:
             print(f"  ❌ ClassificationEngine.classify_dataframe() failed: {e}")
             return False
         
         print(f"\n✅ {parser_name} PASSED")
         return True
         
-    except Exception as e:
+    except (ImportError, ModuleNotFoundError, OSError, ValueError, TypeError, AttributeError, KeyError) as e:
         print(f"❌ FAILED with exception: {e}")
         import traceback
         traceback.print_exc()

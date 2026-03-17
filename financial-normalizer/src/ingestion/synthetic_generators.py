@@ -10,10 +10,14 @@ Synthetic Trial Balance Generators for Testing Edge Cases
 
 import pandas as pd
 import numpy as np
+import logging
 from datetime import datetime, timedelta
 from pathlib import Path
 from typing import List, Dict, Tuple
 from enum import Enum
+
+
+logger = logging.getLogger(__name__)
 
 
 class AccountScheme(Enum):
@@ -432,54 +436,54 @@ def generate_sample_trials(output_dir: str = "/workspaces/Personal-Model-Develop
     Path(output_dir).mkdir(parents=True, exist_ok=True)
     
     # 1. Multi-entity consolidation (4-digit scheme)
-    print("Generating multi-entity consolidation (4-digit)...")
+    logger.info("Generating multi-entity consolidation (4-digit)...")
     me_gen = MultiEntityTrialBalance(num_entities=3, 
                                       account_scheme=AccountScheme.FOUR_DIGIT,
                                       include_intercompany=True)
     me_df = me_gen.generate()
     me_df.to_csv(f"{output_dir}/multi_entity_consolidation_4digit.csv", index=False)
-    print(f"  → Saved {len(me_df)} rows")
+    logger.info("Saved %s rows", len(me_df))
     
     # 2. Multi-entity consolidation (5-digit scheme)
-    print("Generating multi-entity consolidation (5-digit)...")
+    logger.info("Generating multi-entity consolidation (5-digit)...")
     me_gen = MultiEntityTrialBalance(num_entities=2, 
                                       account_scheme=AccountScheme.FIVE_DIGIT,
                                       include_intercompany=False)
     me_df = me_gen.generate(seed=43)
     me_df.to_csv(f"{output_dir}/multi_entity_5digit.csv", index=False)
-    print(f"  → Saved {len(me_df)} rows")
+    logger.info("Saved %s rows", len(me_df))
     
     # 3. Alphanumeric accounts
-    print("Generating trial balance (alphanumeric accounts)...")
+    logger.info("Generating trial balance (alphanumeric accounts)...")
     me_gen = MultiEntityTrialBalance(num_entities=1, 
                                       account_scheme=AccountScheme.ALPHANUMERIC)
     me_df = me_gen.generate(seed=44)
     me_df.to_csv(f"{output_dir}/alphanumeric_accounts.csv", index=False)
-    print(f"  → Saved {len(me_df)} rows")
+    logger.info("Saved %s rows", len(me_df))
     
     # 4. Multi-currency
-    print("Generating multi-currency trial balance...")
+    logger.info("Generating multi-currency trial balance...")
     cur_gen = CurrencyTrialBalance(account_scheme=AccountScheme.FOUR_DIGIT)
     cur_df = cur_gen.generate()
     cur_df.to_csv(f"{output_dir}/multi_currency_trial.csv", index=False)
-    print(f"  → Saved {len(cur_df)} rows")
+    logger.info("Saved %s rows", len(cur_df))
     
     # 5. Mixed basis (cash/accrual)
-    print("Generating mixed basis trial balance...")
+    logger.info("Generating mixed basis trial balance...")
     mb_gen = MixedBasisTrialBalance(account_scheme=AccountScheme.FOUR_DIGIT)
     mb_df = mb_gen.generate()
     mb_df.to_csv(f"{output_dir}/mixed_basis_trial.csv", index=False)
-    print(f"  → Saved {len(mb_df)} rows")
+    logger.info("Saved %s rows", len(mb_df))
     
     # 6. With adjustments
-    print("Generating trial balance with adjustments...")
+    logger.info("Generating trial balance with adjustments...")
     adj_gen = AdjustedTrialBalance(account_scheme=AccountScheme.FOUR_DIGIT)
     unadj_df, adj_df = adj_gen.generate()
     unadj_df.to_csv(f"{output_dir}/unadjusted_trial_balance.csv", index=False)
     adj_df.to_csv(f"{output_dir}/adjustments.csv", index=False)
-    print(f"  → Saved {len(unadj_df)} rows (unadjusted), {len(adj_df)} adjustment entries")
+    logger.info("Saved %s rows (unadjusted), %s adjustment entries", len(unadj_df), len(adj_df))
     
-    print(f"\n✓ All synthetic trial balances generated in {output_dir}/")
+    logger.info("All synthetic trial balances generated in %s/", output_dir)
 
 
 if __name__ == "__main__":
